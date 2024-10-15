@@ -41,13 +41,13 @@ urlpatterns = [
     path('', index_view.index, name='index'),
 
 
-    path('days/', days, name='days'),
+    path('days', days, name='days'),
 
 
     path('days/fetch', days_fetch, name='day_detail'),  # Expecting date as string
 
 
-    path('entries/<str:uuid>/', entry_delete, name='entry_delete'),
+    path('entries/<str:uuid>', entry_delete, name='entry_delete'),
 
     # Catch-all for React Router, which handles frontend routes
     # re_path(r'^.*$', index_view.index, name='react_app'),

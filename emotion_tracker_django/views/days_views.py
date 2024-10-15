@@ -59,42 +59,52 @@ def day_detail(request):
 # POST /days or /days.json (create a new day with periods and entries)
 @csrf_exempt
 def day_create(request):
-    if request.method == 'POST':
-        data = request.POST
-        errors = []
+    data = request.POST
+    errors = []
+    created_entries = []
+
+    try:
+        # Parse JSON request body
+        data = json.loads(request.body.decode('utf-8'))  # Decode and load JSON data
+        day_data = data.get('day')  # Get 'day' key from the JSON data
+
+        if not day_data:
+            return JsonResponse({'error': 'No "day" data provided'}, status=400)
+
+        # Find or create Day object
+        day, _ = Day.objects.get_or_create(date=day_data['date'])
         created_entries = []
+        errors = []
 
-        try:
-            # Find or create Day object
-            day, _ = Day.objects.get_or_create(date=data['day']['date'])
+        # Process periods and emotions
+        for period in day_data['periods_attributes']:
+            # Find or create Period object
+            period_obj, _ = Period.objects.get_or_create(name=period['name'])
+            day_period, _ = DayPeriod.objects.get_or_create(day=day, period=period_obj)
 
-            for period in data['day']['periods_attributes']:
-                # Find or create Period object
-                period_obj, _ = Period.objects.get_or_create(name=period['name'])
-                day_period, _ = DayPeriod.objects.get_or_create(day=day, period=period_obj)
+            # For each emotion in the period, create entries
+            for emotion in period['emotions_attributes']:
+                emotion_obj, _ = Emotion.objects.get_or_create(name=emotion['name'])
+                entry, created = Entry.objects.get_or_create(day_period=day_period, emotion=emotion_obj)
 
-                # For each emotion in the period, create entries
-                for emotion in period['emotions_attributes']:
-                    emotion_obj, _ = Emotion.objects.get_or_create(name=emotion['name'])
-                    entry, created = Entry.objects.get_or_create(day_period=day_period, emotion=emotion_obj)
+                if created:
+                    created_entries.append({
+                        'uuid': entry.uuid,
+                        'emotion_name': emotion_obj.name,
+                        'period_name': period_obj.name,
+                        'date': day.date.isoformat()
+                    })
 
-                    if created:
-                        created_entries.append({
-                            'uuid': entry.uuid,
-                            'emotion_name': emotion_obj.name,
-                            'period_name': period_obj.name,
-                            'date': day.date.isoformat()
-                        })
+    except KeyError as e:
+        return JsonResponse({'error': f'Missing key: {str(e)}'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
 
-        except Exception as e:
-            errors.append(str(e))
+    if errors:
+        return JsonResponse({'error': errors}, status=400)
+    else:
+        return JsonResponse({'entries': created_entries}, status=201)
 
-        if errors:
-            return JsonResponse({'error': errors}, status=400)
-        else:
-            return JsonResponse({'entries': created_entries}, status=201)
-
-    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 # Helper function to set the day (equivalent to set_day)
 def set_day(pk):
