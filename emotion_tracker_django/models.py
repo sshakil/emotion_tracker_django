@@ -68,7 +68,8 @@ class Entry(models.Model):
 
     day_period = models.ForeignKey('DayPeriod', on_delete=models.CASCADE, related_name='entries')
     emotion = models.ForeignKey('Emotion', on_delete=models.CASCADE, related_name='entries')
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    # todo: convert to uuid field here, and to actual uuid type in db
+    uuid = models.CharField(default=uuid.uuid4, max_length=36, editable=False, unique=True)
     user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='entries')
 
     #todo: temp: Override the save method to set a default user

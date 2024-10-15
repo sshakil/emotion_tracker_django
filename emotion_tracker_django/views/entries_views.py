@@ -7,6 +7,7 @@ from ..models import Entry
 @csrf_exempt
 def entry_delete(request, uuid):
     # Find the entry by UUID
+    # todo: convert to uuid field here, and to actual uuid type in db
     entry = get_object_or_404(Entry, uuid=uuid)
 
     if entry:
