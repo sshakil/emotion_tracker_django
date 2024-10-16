@@ -6,11 +6,11 @@ No OAuth+PKCE, yet; uses the same DB as above.<br>
 No need for migrations to be run to get up and running.<br>
 Do need `ENABLE_OAUTH=false` in command for front-end
 
-## Starting Django server
+## Start Django Server
 ```commandline
 python manage.py runserver 8000
 ```
-
+## Start Front End
 ```commandline
 ENABLE_OAUTH=false npx webpack --watch --config ./webpack.config.js
 ```
