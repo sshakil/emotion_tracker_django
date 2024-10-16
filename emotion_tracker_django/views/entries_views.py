@@ -1,10 +1,8 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
 from ..models import Entry
 
 # DELETE /entries/<uuid> or /entries/<uuid>.json
-@csrf_exempt
 def entry_delete(request, uuid):
     # Find the entry by UUID
     # todo: convert to uuid field here, and to actual uuid type in db
