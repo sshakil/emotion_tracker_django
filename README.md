@@ -1,7 +1,7 @@
 # emotion_tracker_django
 
 Django equivalent of EmotionTracker, my RoR CRUD demonstrator<br> 
-Refer to: [https://github.com/sshakil](https://github.com/sshakil/emotion-tracker)<br>
+Refer to: https://github.com/sshakil/emotion-tracker<br>
 No OAuth+PKCE, yet; uses the same DB as above.<br>
 No need for migrations to be run to get up and running.<br>
 Do need `ENABLE_OAUTH=false` in command for front-end
