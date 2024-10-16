@@ -132,8 +132,3 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SECURE = False  # Ensure CSRF cookies are not required to be HTTPS
-CSRF_USE_SESSIONS = False   # Disable CSRF token stored in sessions
