@@ -1,21 +1,17 @@
-#from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
 from django.db import connection
 from rest_framework.utils import json
 
 from ..models import Day, DayPeriod, Period, Entry, Emotion
 
 # GET /days or /days.json
-@csrf_exempt
 def day_list(request):
     if request.method == 'GET':
         days = Day.objects.all().values()  # Fetch all days
         return JsonResponse(list(days), safe=False)
 
 # GET /days/fetch or /days/1.json
-@csrf_exempt
 def day_detail(request):
     data = json.loads(request.body)
     date = data.get('date')
@@ -57,7 +53,6 @@ def day_detail(request):
     return JsonResponse(day_json)
 
 # POST /days or /days.json (create a new day with periods and entries)
-@csrf_exempt
 def day_create(request):
     data = request.POST
     errors = []
